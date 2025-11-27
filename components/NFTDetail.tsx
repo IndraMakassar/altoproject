@@ -7,46 +7,22 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "./ui/c
 import {Input} from "./ui/input";
 import {Label} from "./ui/label";
 import {ArrowLeft, CheckCircle, ExternalLink, Loader2, Shield, Users, XCircle,} from "lucide-react";
-
-// V5 Hooks and Components
 import {ConnectButton, MediaRenderer, useActiveAccount, useReadContract, useSendTransaction,} from "thirdweb/react";
-
 import {chain, client, wallets} from "@/lib/thirdweb";
-
-// Core Utilities
 import {getContract, PreparedTransaction,} from "thirdweb";
-import {parseEther} from "viem";
-
-// V5 ERC1155 Extension Imports
 import {claimTo, getActiveClaimCondition, getNFT,} from "thirdweb/extensions/erc1155";
-import {useWallet} from "@thirdweb-dev/react-core";
-
-
-interface NFTProduct {
-    id: string;
-    product_id: string;
-    product_name: string;
-    description: string;
-    nft_type: "free" | "voucher" | "paid";
-    token_id: number;
-    price_eth?: string;
-    max_supply: number;
-    current_supply: number;
-    is_active: boolean;
-    image_url?: string;
-    contract_address: string;
-    metadata?: any;
-}
-
+import {Product, useProducts} from "@/hooks/useProducts";
 
 interface NFTDetailPageProps {
-    product: NFTProduct;
+    product: Product;
     onBack: () => void;
 }
 
 export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     const account = useActiveAccount();
     const walletAddress = account?.address;
+
+    const { refetch: refetchProducts } = useProducts();
 
     const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
@@ -80,7 +56,6 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
             contract,
             tokenId: tokenIdBigInt,
             // The claimer address is required to calculate the max claimable amount
-            claimer: walletAddress || "0x0000000000000000000000000000000000000000",
         }
     );
 
@@ -88,9 +63,9 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     const {mutateAsync: sendTransaction} = useSendTransaction();
 
     // --- Derived State for Claim Logic ---
-    const claimedByWallet = activeClaimCondition?.claimedSupply || 0n;
-    const maxClaimablePerWallet = activeClaimCondition?.maxClaimablePerWallet || 0n;
-    const isSoldOut = product.max_supply - product.current_supply <= 0;
+    const claimedByWallet = activeClaimCondition?.supplyClaimed || 0n;
+    const maxClaimablePerWallet = activeClaimCondition?.quantityLimitPerWallet || 0n;
+    const isSoldOut = product.current_supply - product.max_supply <= 0;
 
     // Determine if the user has already claimed the maximum allowed
     // Note: maxClaimablePerWallet is 0n if there is no wallet limit set.
@@ -146,16 +121,12 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
 
             } else {
                 // Free or Paid Claim
-                const value = product.price_eth
-                    ? parseEther(product.price_eth)
-                    : 0n;
 
                 transaction = claimTo({
                     contract,
                     to: walletAddress,
                     tokenId: tokenIdBigInt, // <-- ADDED for ERC-1155
                     quantity,
-                    value: value,
                 });
             }
 
@@ -164,6 +135,8 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
 
             setStatus("success");
             setMessage(`Transaction successful! Hash: ${txResult.transactionHash.slice(0, 10)}...`);
+
+            await refetchProducts();
 
         } catch (error) {
             console.error("Claim failed:", error);
@@ -445,7 +418,7 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Contract Address</span>
                                     <a
-                                        href={`${chain.explorers?.[0]?.url}/address/${product.contract_address}`}
+                                        href={`${chain.blockExplorers?.[0]?.url}/address/${product.contract_address}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2 hover:text-primary transition-colors"

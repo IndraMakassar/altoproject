@@ -1,83 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-    CreditCard,
-    Gift,
-    Key,
-    Loader2,
-    AlertCircle,
-    Package,
-    Sparkles,
-} from "lucide-react";
-
-// V5 Imports: useActiveAccount and ConnectButton from thirdweb/react
+import React, {useState} from "react";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {AlertCircle, CreditCard, Gift, Key, Loader2, Package, Sparkles,} from "lucide-react";
 import {ConnectButton, MediaRenderer, useActiveAccount} from "thirdweb/react";
-import {client, chain, wallets} from "@/lib/thirdweb";
-import { useRouter } from "next/navigation";
-
-interface NFTProduct {
-    id: string;
-    product_id: string;
-    product_name: string;
-    description: string;
-    nft_type: "free" | "voucher" | "paid";
-    token_id: number;
-    price_eth?: string;
-    max_supply: number;
-    current_supply: number;
-    is_active: boolean;
-    image_url?: string;
-    contract_address: string;
-    metadata?: any;
-}
+import {chain, client, wallets} from "@/lib/thirdweb";
+import {Product, useProducts} from "@/hooks/useProducts";
 
 interface NFTMarketplaceProps {
-    onSelectNFT?: (nft: NFTProduct) => void;
+    onSelectNFT?: (nft: Product) => void;
 }
 
-export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
-    const [products, setProducts] = useState<NFTProduct[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
+    const { data: products = [], isLoading: loading, error: error, refetch } = useProducts();
+
     const [filterType, setFilterType] = useState<"all" | "free" | "voucher" | "paid">("all");
 
     // V5 Hook: useActiveAccount to get the wallet status
     const account = useActiveAccount();
     const walletAddress = account?.address;
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    const fetchProducts = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch("/api/products");
-            const data = await response.json();
-
-            if (data.success) {
-                setProducts(data.data.products || []);
-            } else {
-                throw new Error(data.message);
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to load NFT products");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const tierInfo = {
         free: {
@@ -104,10 +47,11 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
     };
 
     const filtered = products.filter((p) =>
-        filterType === "all" ? p.is_active : p.nft_type === filterType && p.is_active
+        filterType === "all" ? true : p.nft_type === filterType
+        // filterType === "all" ? p.is_active : p.nft_type === filterType && p.is_active
     );
 
-    const handleAction = (product: NFTProduct) => {
+    const handleAction = (product: Product) => {
         if (!walletAddress) {
             alert("Please connect your wallet first");
             return;
@@ -115,7 +59,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
         if (onSelectNFT) onSelectNFT(product);
     };
 
-    const getPrice = (p: NFTProduct) =>
+    const getPrice = (p: Product) =>
         p.nft_type === "free"
             ? "FREE"
             : p.nft_type === "voucher"
@@ -124,16 +68,16 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                     ? `${p.price_eth} ETH`
                     : "TBD";
 
-    const supplyLeft = (p: NFTProduct) => 100;
-
     return (
         <div className="min-h-screen bg-background">
             {/* ... (Header and filters remain the same) ... */}
-            <header className="border-b border-border p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
+            <header
+                className="border-b border-border p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <Sparkles className="w-6 h-6 text-white" />
+                        <div
+                            className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <Sparkles className="w-6 h-6 text-white"/>
                         </div>
                         <div>
                             <h1 className="font-bold text-xl">NFT Marketplace</h1>
@@ -188,7 +132,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                                     onClick={() => setFilterType(t)}
                                     className="flex items-center gap-2"
                                 >
-                                    <Icon className="w-4 h-4" /> {label}
+                                    <Icon className="w-4 h-4"/> {label}
                                 </Button>
                             );
                         })}
@@ -199,7 +143,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                 {/* Loading, Error, and Grid logic remains the same */}
                 {loading && (
                     <div className="py-20 text-center">
-                        <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-purple-500" />
+                        <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-purple-500"/>
                         <p className="text-muted-foreground">Loading NFT collection...</p>
                     </div>
                 )}
@@ -208,10 +152,10 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                     <div className="max-w-md mx-auto">
                         <Card className="border-red-500/20 bg-red-500/10">
                             <CardContent className="pt-6 text-center">
-                                <AlertCircle className="w-12 h-12 text-red-600 mx-auto mb-4" />
+                                <AlertCircle className="w-12 h-12 text-red-600 mx-auto mb-4"/>
                                 <h3 className="text-lg font-semibold mb-2">Failed to Load Products</h3>
-                                <p className="text-sm text-muted-foreground mb-4">{error}</p>
-                                <Button onClick={fetchProducts} variant="outline">
+                                <p className="text-sm text-muted-foreground mb-4">{error.message}</p>
+                                <Button onClick={() => refetch()} variant="outline">
                                     Try Again
                                 </Button>
                             </CardContent>
@@ -223,7 +167,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                     <div>
                         {filtered.length === 0 ? (
                             <div className="py-20 text-center">
-                                <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                                <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4"/>
                                 <h3 className="text-xl font-semibold mb-2">No NFTs Available</h3>
                                 <p className="text-muted-foreground">
                                     {filterType === "all"
@@ -235,7 +179,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {filtered.map((p) => {
                                     const T = tierInfo[p.nft_type];
-                                    const available = supplyLeft(p);
+                                    const available = p.current_supply - p.max_supply;
                                     const isSoldOut = available <= 0;
 
                                     return (
@@ -263,13 +207,15 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                                                         }}
                                                     />
                                                 ) : (
-                                                    <div className={`w-full h-full flex items-center justify-center ${T.bgOpacity}`}>
-                                                        <T.icon className="w-20 h-20 text-muted-foreground/40" />
+                                                    <div
+                                                        className={`w-full h-full flex items-center justify-center ${T.bgOpacity}`}>
+                                                        <T.icon className="w-20 h-20 text-muted-foreground/40"/>
                                                     </div>
                                                 )}
 
                                                 {/* Overlay on hover */}
-                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                                                <div
+                                                    className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"/>
 
                                                 {/* Supply Badge */}
                                                 <div className="absolute top-4 right-4">
@@ -278,7 +224,8 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                                                             Sold Out
                                                         </Badge>
                                                     ) : available <= 10 ? (
-                                                        <Badge variant="secondary" className="shadow-lg bg-orange-500 text-white">
+                                                        <Badge variant="secondary"
+                                                               className="shadow-lg bg-orange-500 text-white">
                                                             {available} left
                                                         </Badge>
                                                     ) : (
@@ -291,7 +238,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                                                 {/* Type Badge */}
                                                 <div className="absolute top-4 left-4">
                                                     <Badge variant={T.badge} className="shadow-lg">
-                                                        <T.icon className="w-3 h-3 mr-1" />
+                                                        <T.icon className="w-3 h-3 mr-1"/>
                                                         {p.nft_type.toUpperCase()}
                                                     </Badge>
                                                 </div>
@@ -308,7 +255,8 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
 
                                             <CardContent>
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                                                    <span
+                                                        className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                                                         {getPrice(p)}
                                                     </span>
                                                     <span className="text-muted-foreground text-sm">
@@ -328,8 +276,9 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                                                     {isSoldOut ? "Sold Out" : T.text}
                                                 </Button>
 
-                                                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                                                    <span>Supply: {p.current_supply}/{p.max_supply}</span>
+                                                <div
+                                                    className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                                                    <span>Supply: {p.max_supply}/{p.current_supply}</span>
                                                     {p.contract_address && (
                                                         <span className="font-mono">
                                                             {p.contract_address.slice(0, 6)}...{p.contract_address.slice(-4)}

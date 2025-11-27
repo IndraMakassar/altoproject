@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getNFTContract } from "@/lib/thirdweb";
 import { getNFTs } from "thirdweb/extensions/erc1155";
 
-// Convert BigInt → string
 function safeJson(obj: any): any {
     return JSON.parse(
         JSON.stringify(obj, (_, value) =>
@@ -21,6 +20,8 @@ export async function GET() {
         });
 
         const products = nfts.map((nft) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             const supply = Number(nft.supply ?? 0);
 
             return {
@@ -30,11 +31,15 @@ export async function GET() {
                 description: nft.metadata?.description || "",
                 nft_type: "free",
                 token_id: Number(nft.id),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
                 price_eth: nft.metadata?.attributes?.find(a => a.trait_type === "price")?.value || "0",
 
                 // Use on-chain supply properly
                 max_supply: supply,
-                current_supply: 0, // If you want minting later, replace with balanceOf
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                current_supply: nft.metadata?.attributes?.find(a => a.trait_type === "available")?.value || "0", // If you want minting later, replace with balanceOf
 
                 is_active: supply > 0, // simple logic
 
@@ -47,13 +52,13 @@ export async function GET() {
 
         return NextResponse.json({
             success: true,
-            data: { products },
+            data: {products},
         });
-    } catch (error: any) {
-        console.error("API ERROR:", error);
+    } catch (error) {
+        console.error("Error fetching products:", error);
         return NextResponse.json(
-            { success: false, message: error.message },
-            { status: 500 }
+            {success: false, error: "Failed to fetch products"},
+            {status: 500}
         );
     }
 }

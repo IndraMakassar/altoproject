@@ -1,5 +1,5 @@
 import "./globals.css";
-import {ClientProviders} from "@/app/ClientProviders";
+import ClientProviders from "@/app/ClientProviders";
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
     // convert to client using a nested client wrapper

@@ -1,6 +1,6 @@
 // lib/thirdweb.ts - POLYGON ONLY CONFIGURATION
-import { createThirdwebClient, getContract } from "thirdweb";
-import { polygon, polygonAmoy } from "thirdweb/chains";
+import {createThirdwebClient, getContract} from "thirdweb";
+import {polygonAmoy} from "thirdweb/chains";
 import {inAppWallet, smartWallet} from "thirdweb/wallets";
 
 // ============================================================================
@@ -17,7 +17,7 @@ function validateEnv() {
 // Create single unified client
 export const client = createThirdwebClient({
     clientId: clientId || "placeholder-client",
-    ...(secretKey && { secretKey }), // Only include secretKey if it exists (server-side)
+    ...(secretKey && {secretKey}), // Only include secretKey if it exists (server-side)
 });
 
 // ============================================================================
@@ -63,9 +63,9 @@ export const nftContracts = [
         address: process.env.NEXT_PUBLIC_FREE_NFT_CONTRACT,
     },
     // {
-        // key: "voucher",
-        // name: "Voucher NFT",
-        // address: process.env.NEXT_PUBLIC_VOUCHER_NFT_CONTRACT,
+    // key: "voucher",
+    // name: "Voucher NFT",
+    // address: process.env.NEXT_PUBLIC_VOUCHER_NFT_CONTRACT,
     // },
     // {
     //     key: "paid",
@@ -101,7 +101,7 @@ export function getNFTContract(key: string) {
 
     return getContract({
         client,
-        chain,                  
+        chain,
         address: found.address,
     });
 }

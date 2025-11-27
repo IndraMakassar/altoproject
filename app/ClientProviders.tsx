@@ -1,13 +1,15 @@
 "use client";
 
-import { ThirdwebProvider } from "thirdweb/react";
-import {chain, wallets} from "@/lib/thirdweb";
+import {ThirdwebProvider} from "thirdweb/react";
+import {ReactNode} from "react";
+import QueryProvider from "@/app/providers/QueryProvider";
 
-export function ClientProviders({ children }: { children: React.ReactNode }) {
-
+export default function ClientProviders({children}: { children: ReactNode }) {
     return (
-            <ThirdwebProvider activeChain={chain} wallets={wallets}>
+        <ThirdwebProvider>
+            <QueryProvider>
                 {children}
-            </ThirdwebProvider>
+            </QueryProvider>
+        </ThirdwebProvider>
     );
 }
