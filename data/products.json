@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "product_id": "NFT001",
+      "product_name": "Exclusive Free NFT",
+      "description": "A free NFT to welcome new users.",
+      "nft_type": "free",
+      "token_id": 1,
+      "price_eth": null,
+      "max_supply": 100,
+      "current_supply": 15,
+      "is_active": true,
+      "image_url": "https://picsum.photos/400?random=1",
+      "contract_address": "0xYOUR_CONTRACT_ADDRESS"
+    },
+    {
+      "id": "2",
+      "product_id": "NFT002",
+      "product_name": "Voucher NFT",
+      "description": "Redeem this NFT using a voucher code.",
+      "nft_type": "voucher",
+      "token_id": 2,
+      "price_eth": null,
+      "max_supply": 50,
+      "current_supply": 20,
+      "is_active": true,
+      "image_url": "https://picsum.photos/400?random=2",
+      "contract_address": "0xYOUR_CONTRACT_ADDRESS"
+    },
+    {
+      "id": "3",
+      "product_id": "NFT003",
+      "product_name": "Premium NFT",
+      "description": "A rare collectible NFT.",
+      "nft_type": "paid",
+      "token_id": 3,
+      "price_eth": "0.01",
+      "max_supply": 10,
+      "current_supply": 5,
+      "is_active": true,
+      "image_url": "https://picsum.photos/400?random=3",
+      "contract_address": "0xYOUR_CONTRACT_ADDRESS"
+    }
+  ]
+}
