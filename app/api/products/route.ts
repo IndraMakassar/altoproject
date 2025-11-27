@@ -20,8 +20,6 @@ export async function GET() {
             contract,
         });
 
-        console.log(nfts)
-
         const products = nfts.map((nft) => {
             const supply = Number(nft.supply ?? 0);
 

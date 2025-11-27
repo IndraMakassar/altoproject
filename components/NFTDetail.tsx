@@ -6,38 +6,20 @@ import {Badge} from "./ui/badge";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "./ui/card";
 import {Input} from "./ui/input";
 import {Label} from "./ui/label";
-import {
-    ArrowLeft,
-    CheckCircle,
-    ExternalLink,
-    Loader2,
-    Shield,
-    Users,
-    XCircle,
-} from "lucide-react";
+import {ArrowLeft, CheckCircle, ExternalLink, Loader2, Shield, Users, XCircle,} from "lucide-react";
 
 // V5 Hooks and Components
-import {
-    ConnectButton,
-    MediaRenderer,
-    useActiveAccount,
-    useReadContract,
-    useSendTransaction,
-} from "thirdweb/react";
+import {ConnectButton, MediaRenderer, useActiveAccount, useReadContract, useSendTransaction,} from "thirdweb/react";
 
-import {chain, client} from "@/lib/thirdweb";
+import {chain, client, wallets} from "@/lib/thirdweb";
 
 // Core Utilities
-import {getContract, PreparedTransaction, } from "thirdweb";
+import {getContract, PreparedTransaction,} from "thirdweb";
 import {parseEther} from "viem";
 
 // V5 ERC1155 Extension Imports
-import {
-    getNFT,
-    claimTo,
-    // getActiveClaimCondition is needed to read the phase limits
-    getActiveClaimCondition,
-} from "thirdweb/extensions/erc1155";
+import {claimTo, getActiveClaimCondition, getNFT,} from "thirdweb/extensions/erc1155";
+import {useWallet} from "@thirdweb-dev/react-core";
 
 
 interface NFTProduct {
@@ -263,7 +245,8 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                         <ArrowLeft className="w-4 h-4"/>
                         <span>Back to Marketplace</span>
                     </Button>
-                    <ConnectButton client={client} chain={chain} theme={"light"}/>
+                    <ConnectButton client={client} chain={chain} theme={"light"} wallets={wallets}
+                                   connectButton={{label: "Login", className: "!text-sm",}}/>
                 </div>
             </header>
 
@@ -412,9 +395,10 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                     <ConnectButton
                                         client={client}
                                         chain={chain}
+                                        wallets={wallets}
                                         theme={"light"}
                                         connectButton={{
-                                            label: "Connect Wallet to Claim",
+                                            label: "Login to Claim",
                                             className: "w-full !text-base",
                                         }}
                                     />

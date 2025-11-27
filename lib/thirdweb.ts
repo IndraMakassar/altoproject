@@ -1,6 +1,7 @@
 // lib/thirdweb.ts - POLYGON ONLY CONFIGURATION
 import { createThirdwebClient, getContract } from "thirdweb";
 import { polygon, polygonAmoy } from "thirdweb/chains";
+import {inAppWallet, smartWallet} from "thirdweb/wallets";
 
 // ============================================================================
 // CLIENT CONFIGURATION
@@ -24,11 +25,32 @@ export const client = createThirdwebClient({
 // ============================================================================
 
 // Only Polygon chains
-export const supportedChains = [polygon, polygonAmoy];
+export const supportedChains = [polygonAmoy];
 
 // Active chain based on environment variable
-export const chain =
-    process.env.NEXT_PUBLIC_CHAIN === "polygon" ? polygon : polygonAmoy;
+export const chain = polygonAmoy;
+
+// ============================================================================
+// WALLET CONFIGURATION
+// ============================================================================
+
+// 1. MetaMask: Using generic createWallet
+export const wallets = [
+    inAppWallet({
+        executionMode: {
+            mode: "EIP4337",
+            smartAccount: {
+                chain: chain,
+                sponsorGas: true,
+            }
+        },
+    }),
+    smartWallet({
+        chain: chain,
+        sponsorGas: true,
+    }),
+
+];
 
 // ============================================================================
 // NFT CONTRACT CONFIGURATION
@@ -79,7 +101,7 @@ export function getNFTContract(key: string) {
 
     return getContract({
         client,
-        chain,
+        chain,                  
         address: found.address,
     });
 }

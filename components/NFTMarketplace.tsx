@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
     Card,
     CardContent,
@@ -23,8 +21,9 @@ import {
 } from "lucide-react";
 
 // V5 Imports: useActiveAccount and ConnectButton from thirdweb/react
-import { ConnectButton, useActiveAccount } from "thirdweb/react";
-import { client, chain } from "@/lib/thirdweb";
+import {ConnectButton, MediaRenderer, useActiveAccount} from "thirdweb/react";
+import {client, chain, wallets} from "@/lib/thirdweb";
+import { useRouter } from "next/navigation";
 
 interface NFTProduct {
     id: string;
@@ -125,7 +124,7 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                     ? `${p.price_eth} ETH`
                     : "TBD";
 
-    const supplyLeft = (p: NFTProduct) => p.max_supply - p.current_supply;
+    const supplyLeft = (p: NFTProduct) => 100;
 
     return (
         <div className="min-h-screen bg-background">
@@ -146,9 +145,10 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
                         <ConnectButton
                             client={client}
                             chain={chain}
+                            wallets={wallets}
                             theme={"light"}
                             connectButton={{
-                                label: "Connect Wallet",
+                                label: "Login",
                                 className: "!text-sm",
                             }}
                         />
@@ -251,11 +251,16 @@ export default function NFTMarketplace({ onSelectNFT }: NFTMarketplaceProps) {
 
                                             <div className="relative h-64 bg-muted overflow-hidden">
                                                 {p.image_url ? (
-                                                    <Image
+                                                    <MediaRenderer
+                                                        client={client}
                                                         src={p.image_url}
                                                         alt={p.product_name}
-                                                        fill
                                                         className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "100%",
+                                                            objectFit: "cover",
+                                                        }}
                                                     />
                                                 ) : (
                                                     <div className={`w-full h-full flex items-center justify-center ${T.bgOpacity}`}>

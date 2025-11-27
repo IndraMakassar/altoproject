@@ -1,7 +1,7 @@
 "use client";
 
 import {ConnectEmbed} from "thirdweb/react";
-import {chain, client} from "@/lib/thirdweb";
+import {chain, client, wallets} from "@/lib/thirdweb";
 import Image from "next/image";
 
 export function LoginPage() {
@@ -45,6 +45,7 @@ export function LoginPage() {
                         <ConnectEmbed
                             client={client}
                             chain={chain}
+                            wallets={wallets}
                             theme="light"
                             style={{
                                 width: "100%",
