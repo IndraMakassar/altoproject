@@ -45,7 +45,7 @@ export function LoginPage() {
                         <ConnectEmbed
                             client={client}
                             chain={chain}
-                            theme="dark"
+                            theme="light"
                             style={{
                                 width: "100%",
                             }}
