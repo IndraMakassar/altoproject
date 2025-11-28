@@ -207,19 +207,34 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <header
-                className="border-b border-border p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <header className="border-b border-border p-3 sm:p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
+                <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-3">
+
+                    {/* Back Button */}
                     <Button
                         variant="ghost"
                         onClick={onBack}
-                        className="flex items-center space-x-2"
+                        className="flex items-center space-x-2 w-full xs:w-auto justify-center xs:justify-start text-sm"
                     >
-                        <ArrowLeft className="w-4 h-4"/>
-                        <span>Back to Marketplace</span>
+                        <ArrowLeft className="w-4 h-4" />
+                        <span className="hidden xs:inline">Back to Marketplace</span>
+                        <span className="xs:hidden">Back</span> {/* Shorter text for mobile */}
                     </Button>
-                    <ConnectButton client={client} chain={chain} theme={"light"} wallets={wallets}
-                                   connectButton={{label: "Login", className: "!text-sm",}}/>
+
+                    {/* Login Button */}
+                    <div className="w-full xs:w-auto flex justify-center xs:justify-end">
+                        <ConnectButton
+                            client={client}
+                            chain={chain}
+                            wallets={wallets}
+                            theme="light"
+                            connectButton={{
+                                label: "Login",
+                                className: "!text-sm w-full xs:w-auto",
+                            }}
+                        />
+                    </div>
+
                 </div>
             </header>
 

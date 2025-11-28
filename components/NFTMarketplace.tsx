@@ -68,32 +68,35 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
     return (
         <div className="min-h-screen bg-background">
             {/* ... (Header and filters remain the same) ... */}
-            <header
-                className="border-b border-border p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <div className="flex items-center space-x-3">
+            <header className="border-b border-border p-3 sm:p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
+                <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-3">
+
+                    {/* Logo */}
+                    <div className="flex items-center">
                         <Image
-                            src={"/Voyage Logo.png"}
+                            src="/Voyage Logo.png"
                             alt="Voyage Logo"
-                            width={213} // Set appropriate width for the logo container (w-16)
-                            height={64} // Set appropriate height for the logo container (h-16)
-                            className="rounded-full mx-auto object-contain" // Keep object-contain for logos
-                            priority // High priority as it's a key part of the initial view
+                            width={140}
+                            height={40}
+                            className="object-contain w-32 xs:w-40 sm:w-48"
+                            priority
                         />
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    {/* Login button */}
+                    <div className="w-full xs:w-auto flex justify-center xs:justify-end">
                         <ConnectButton
                             client={client}
                             chain={chain}
                             wallets={wallets}
-                            theme={"light"}
+                            theme="light"
                             connectButton={{
                                 label: "Login",
-                                className: "!text-sm",
+                                className: "!text-sm w-full xs:w-auto",
                             }}
                         />
                     </div>
+
                 </div>
             </header>
 
