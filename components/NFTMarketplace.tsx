@@ -8,6 +8,7 @@ import {AlertCircle, CreditCard, Gift, Key, Loader2, Package, Sparkles,} from "l
 import {ConnectButton, MediaRenderer, useActiveAccount} from "thirdweb/react";
 import {chain, client, wallets} from "@/lib/thirdweb";
 import {Product, useProducts} from "@/hooks/useProducts";
+import Image from "next/image";
 
 interface NFTMarketplaceProps {
     onSelectNFT?: (nft: Product) => void;
@@ -52,10 +53,6 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
     );
 
     const handleAction = (product: Product) => {
-        if (!walletAddress) {
-            alert("Please connect your wallet first");
-            return;
-        }
         if (onSelectNFT) onSelectNFT(product);
     };
 
@@ -75,14 +72,14 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
                 className="border-b border-border p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div className="flex items-center space-x-3">
-                        <div
-                            className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <Sparkles className="w-6 h-6 text-white"/>
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-xl">NFT Marketplace</h1>
-                            <p className="text-xs text-muted-foreground">Powered by Thirdweb</p>
-                        </div>
+                        <Image
+                            src={"/Voyage Logo.png"}
+                            alt="Voyage Logo"
+                            width={213} // Set appropriate width for the logo container (w-16)
+                            height={64} // Set appropriate height for the logo container (h-16)
+                            className="rounded-full mx-auto object-contain" // Keep object-contain for logos
+                            priority // High priority as it's a key part of the initial view
+                        />
                     </div>
 
                     <div className="flex items-center gap-3">
