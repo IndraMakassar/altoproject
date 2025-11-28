@@ -62,6 +62,9 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     // V5 Hook: useSendTransaction for writing to the contract
     const {mutateAsync: sendTransaction} = useSendTransaction();
 
+    console.log(product.current_supply)
+    console.log(product.max_supply)
+
     // --- Derived State for Claim Logic ---
     const claimedByWallet = activeClaimCondition?.supplyClaimed || 0n;
     const maxClaimablePerWallet = activeClaimCondition?.quantityLimitPerWallet || 0n;
@@ -162,7 +165,7 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     const imageUrl = nftMetadata?.metadata.image || product.image_url;
     const currentSupply = product.current_supply;
     const maxSupply = product.max_supply;
-    const available = maxSupply - currentSupply;
+    const available = currentSupply - maxSupply;
 
     const tierInfo = {
         free: {badge: "default" as const, text: "Claim for Free"},
@@ -449,7 +452,7 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Supply</span>
                                     <span>
-                                        {currentSupply}/{maxSupply}
+                                        {maxSupply}/{currentSupply}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
