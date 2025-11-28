@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
-import {AlertCircle, CreditCard, Gift, Key, Loader2, Package, Sparkles,} from "lucide-react";
+import {AlertCircle, CreditCard, Gift, Key, Loader2, Package} from "lucide-react";
 import {ConnectButton, MediaRenderer, useActiveAccount} from "thirdweb/react";
 import {chain, client, wallets} from "@/lib/thirdweb";
 import {Product, useProducts} from "@/hooks/useProducts";
@@ -20,8 +20,6 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
     const [filterType, setFilterType] = useState<"all" | "free" | "voucher" | "paid">("all");
 
     // V5 Hook: useActiveAccount to get the wallet status
-    const account = useActiveAccount();
-    const walletAddress = account?.address;
 
     const tierInfo = {
         free: {
@@ -69,7 +67,7 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
         <div className="min-h-screen bg-background">
             {/* ... (Header and filters remain the same) ... */}
             <header className="border-b border-border p-3 sm:p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
-                <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-3">
+                <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-3 flex-wrap">
 
                     {/* Logo */}
                     <div className="flex items-center">
@@ -84,7 +82,7 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
                     </div>
 
                     {/* Login button */}
-                    <div className="w-full xs:w-auto flex justify-center xs:justify-end">
+                    <div className="flex justify-end">
                         <ConnectButton
                             client={client}
                             chain={chain}
@@ -92,7 +90,7 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
                             theme="light"
                             connectButton={{
                                 label: "Login",
-                                className: "!text-sm w-full xs:w-auto",
+                                className: "!text-sm",
                             }}
                         />
                     </div>
@@ -100,13 +98,14 @@ export default function NFTMarketplace({onSelectNFT}: NFTMarketplaceProps) {
                 </div>
             </header>
 
+
             <main className="max-w-7xl mx-auto p-8">
                 <div className="text-center mb-12">
                     <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
                         Exclusive NFT Collection
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Discover and collect unique digital assets on {chain.name}
+                        Discover and collect unique digital assets on Polygon
                     </p>
                 </div>
 

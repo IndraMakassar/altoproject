@@ -208,33 +208,30 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
         <div className="min-h-screen bg-background">
             {/* Header */}
             <header className="border-b border-border p-3 sm:p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur z-50">
-                <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-3">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
 
-                    {/* Back Button */}
+                    {/* Back Button (shortened on mobile) */}
                     <Button
                         variant="ghost"
                         onClick={onBack}
-                        className="flex items-center space-x-2 w-full xs:w-auto justify-center xs:justify-start text-sm"
+                        className="flex items-center space-x-2 text-sm whitespace-nowrap"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        <span className="hidden xs:inline">Back to Marketplace</span>
-                        <span className="xs:hidden">Back</span> {/* Shorter text for mobile */}
+                        <span className="hidden sm:inline">Back to Marketplace</span>
+                        <span className="sm:hidden">Back</span>
                     </Button>
 
                     {/* Login Button */}
-                    <div className="w-full xs:w-auto flex justify-center xs:justify-end">
-                        <ConnectButton
-                            client={client}
-                            chain={chain}
-                            wallets={wallets}
-                            theme="light"
-                            connectButton={{
-                                label: "Login",
-                                className: "!text-sm w-full xs:w-auto",
-                            }}
-                        />
-                    </div>
-
+                    <ConnectButton
+                        client={client}
+                        chain={chain}
+                        wallets={wallets}
+                        theme="light"
+                        connectButton={{
+                            label: "Login",
+                            className: "!text-sm",
+                        }}
+                    />
                 </div>
             </header>
 
@@ -328,13 +325,13 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                 <div className="flex items-center space-x-2">
                                     <Users className="w-4 h-4 text-muted-foreground"/>
                                     <span className="text-sm">
-                                        Created by {product.metadata?.creator || "NFT Creator"}
+                                        Created by {product.metadata?.creator || "Voyage"}
                                     </span>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <Shield className="w-4 h-4 text-muted-foreground"/>
                                     <span className="text-sm">
-                                        {chain.name}
+                                        Polygon
                                     </span>
                                 </div>
                             </div>
@@ -457,7 +454,7 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Blockchain</span>
-                                    <span>{chain.name}</span>
+                                    <span>Polygon</span>
                                 </div>
                             </CardContent>
                         </Card>
