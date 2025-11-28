@@ -68,7 +68,7 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
     // --- Derived State for Claim Logic ---
     const claimedByWallet = activeClaimCondition?.supplyClaimed || 0n;
     const maxClaimablePerWallet = activeClaimCondition?.quantityLimitPerWallet || 0n;
-    const isSoldOut = product.current_supply - product.max_supply <= 0;
+    // const isSoldOut = product.current_supply - product.max_supply <= 0;
 
     // Determine if the user has already claimed the maximum allowed
     // Note: maxClaimablePerWallet is 0n if there is no wallet limit set.
@@ -262,15 +262,15 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                             )}
 
                             <div className="absolute top-4 left-4">
-                                {isSoldOut ? (
-                                    <Badge variant="destructive" className="bg-red-600 text-white">
-                                        Sold Out
-                                    </Badge>
-                                ) : (
+                                {/*{isSoldOut ? (*/}
+                                {/*    <Badge variant="destructive" className="bg-red-600 text-white">*/}
+                                {/*        Sold Out*/}
+                                {/*    </Badge>*/}
+                                {/*) : (*/}
                                     <Badge variant="secondary" className="bg-white/90 text-black">
                                         {available} available
                                     </Badge>
-                                )}
+                                {/*)}*/}
                             </div>
                         </div>
 
@@ -399,14 +399,16 @@ export function NFTDetail({product, onBack}: NFTDetailPageProps) {
                                         variant={"default"}
                                         disabled={
                                             status === "claiming" || // This disables the button and applies opacity-50 style
-                                            isSoldOut ||
+                                            // isSoldOut ||
                                             hasExceededLimit ||
                                             (product.nft_type === "voucher" && !code)
                                         }
                                     >
-                                        {isSoldOut ? (
-                                            "Sold Out"
-                                        ) : hasExceededLimit ? (
+                                        {
+                                        //     isSoldOut ? (
+                                        //     "Sold Out"
+                                        // ) :
+                                                hasExceededLimit ? (
                                             "Claim Limit Reached"
                                         ) : (
                                             // Always show the standard call to action text (T.text)
